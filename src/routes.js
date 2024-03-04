@@ -9,4 +9,7 @@ export default {
   mediaUploadPath: () => [apiPath, 'media', 'upload'].join('/'),
   mediaIdGetPath: () => [apiPath, 'media', '{id}'].join('/'),
   mediaDeletePath: () => [apiPath, 'media', '{id}'].join('/'),
+  registrationPage: () => '/registration',
+  loginPage: () => '/login',
+  accountPage: () => '/',
 };

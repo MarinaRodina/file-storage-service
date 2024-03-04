@@ -18,11 +18,11 @@ const App = () => (
     <div className="d-flex flex-column h-100">
       <Routes>
         <Route
-          path={routes.mediaGetPath()}
+          path={routes.accountPage()}
           element={<RoutePrivate><PersonalAccountPage /></RoutePrivate>}
         />
-        <Route path={routes.loginPath()} element={<LoginPage />} />
-        <Route path={routes.registerPath()} element={<RegistrationPage />} />
+        <Route path={routes.loginPage()} element={<LoginPage />} />
+        <Route path={routes.registrationPage()} element={<RegistrationPage />} />
       </Routes>
     </div>
   </Provider>

@@ -1,6 +1,9 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
+import axios from 'axios';
+import image from '../images/image.jpg';
 import routes from '../routes.js';
 import useAuth from '../Hooks/useAuth.jsx';
 
@@ -22,11 +25,11 @@ const RegistrationPage = () => {
       axios.post(routes.registerPath(), { email: values.email, password: values.password, name: values.name })
         .then((response) => {
           auth.logIn(response);
-          navigate(routes.chatPagePath());
+          navigate(routes.accountPage());
         })
         .catch((err) => {
           if (err.response.status === 409) {
-            errors.username = t('signup.alreadyExists');
+            errors.username = 'Такой пользователь уже существует';
             return setSubmitting(false);
           }
           return setSubmitting(false);
@@ -42,29 +45,28 @@ const RegistrationPage = () => {
             <div className="card shadow-sm">
               <div className="card-body d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
                 <div>
-                  <img src={avatar2} className="rounded-circle" alt={t('signup.registration')} />
+                  <img src={image} style={{ width: '350px', height: 'auto' }} alt={'Регистрация'} />
                 </div>
                 <Form className="w-50" onSubmit={handleSubmit}>
-                  <h1 className="text-center mb-4">{t('signup.registration')}</h1>
+                  <h1 className="text-center mb-4">{'Регистрация'}</h1>
                   <Form.Group className="form-floating mb-3">
                     <Form.Control
-                      placeholder={t('signup.userName')}
-                      name="username"
-                      autoComplete="username"
+                      placeholder={'Email'}
+                      name="email"
+                      autoComplete="email"
                       required=""
-                      id="username"
-                      className={errors.username && touched.username ? 'form-control is-invalid' : 'form-control'}
+                      id="email"
+                      className={errors.email && touched.email ? 'form-control is-invalid' : 'form-control'}
                       onChange={handleChange}
-                      value={values.username}
+                      value={values.email}
                       onBlur={handleBlur}
-                      ref={usernameRef}
                     />
-                    <div className="invalid-tooltip">{errors.username}</div>
-                    <Form.Label className="form-label" htmlFor="username">{t('signup.userName')}</Form.Label>
+                    <div className="invalid-tooltip">{errors.email}</div>
+                    <Form.Label className="form-label" htmlFor="email">{'Email'}</Form.Label>
                   </Form.Group>
                   <Form.Group className="form-floating mb-3">
                     <Form.Control
-                      placeholder={t('signup.password')}
+                      placeholder={'Пароль'}
                       name="password"
                       aria-describedby="passwordHelpBlock"
                       required=""
@@ -77,31 +79,29 @@ const RegistrationPage = () => {
                       onBlur={handleBlur}
                     />
                     <div className="invalid-tooltip">{errors.password}</div>
-                    <Form.Label className="form-label" htmlFor="password">{t('signup.password')}</Form.Label>
+                    <Form.Label className="form-label" htmlFor="password">{'Пароль'}</Form.Label>
                   </Form.Group>
-                  <Form.Group className="form-floating mb-4">
+                  <Form.Group className="form-floating mb-3">
                     <Form.Control
-                      placeholder={t('signup.confirmPassword')}
-                      name="confirmPassword"
-                      autoComplete="new-password"
+                      placeholder={'Имя пользователя'}
+                      name="name"
+                      autoComplete="name"
                       required=""
-                      type="password"
-                      id="confirmPassword"
-                      className={errors.confirmPassword && touched.confirmPassword ? 'form-control is-invalid' : 'form-control'}
+                      id="name"
+                      className={errors.name && touched.name ? 'form-control is-invalid' : 'form-control'}
                       onChange={handleChange}
-                      value={values.confirmPassword}
+                      value={values.name}
                       onBlur={handleBlur}
-                      disabled={isSubmitting}
                     />
-                    <div className="invalid-tooltip">{errors.confirmPassword}</div>
-                    <Form.Label className="form-label" htmlFor="confirmPassword">{t('signup.confirmPassword')}</Form.Label>
+                    <div className="invalid-tooltip">{errors.name}</div>
+                    <Form.Label className="form-label" htmlFor="name">{'Имя позователя'}</Form.Label>
                   </Form.Group>
                   <Button
                     type="submit"
                     disabled={isSubmitting}
                     className="w-100 mb-3 btn btn-outline-primary btn-light"
                   >
-                    {t('signup.register')}
+                    {'Зарегистрироваться'}
                   </Button>
                 </Form>
               </div>
