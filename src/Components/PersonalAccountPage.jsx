@@ -14,6 +14,8 @@ const PersonalAccountPage = () => {
   const uploadedFiles = useSelector((state) => state.filesReducer.files) || [];
   const dispatch = useDispatch();
 
+  const count = useSelector((state) => state.filesReducer.uploadedFilesCount);
+
   useEffect(() => {
     if (!localStorage.getItem('userInfo')) {
       navigate(routes.loginPage());
@@ -75,6 +77,7 @@ const PersonalAccountPage = () => {
             createdAt: {},
           })}>
             Добавить файл</Button>
+          <div className="fixed-bottom bg-secondary text-white p-3">Количество файлов: {count}</div>
         </div>
       </div>
     </div>
