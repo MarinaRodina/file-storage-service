@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import PersonalAccountPage from './Components/PersonalAccountPage.jsx';
+import HeaderComponent from './Components/HeaderComponent.jsx';
 import LoginPage from './Components/LoginPage.jsx';
 import RegistrationPage from './Components/RegistrationPage.jsx';
 import routes from './routes.js';
@@ -16,6 +17,7 @@ const RoutePrivate = ({ children }) => {
 const App = () => (
   <Provider store={store}>
     <div className="d-flex flex-column h-100">
+      <HeaderComponent />
       <Routes>
         <Route
           path={routes.accountPage()}

@@ -25,7 +25,7 @@ const RegistrationPage = () => {
       axios.post(routes.registerPath(), { email: values.email, password: values.password, name: values.name })
         .then((response) => {
           auth.logIn(response);
-          navigate(routes.accountPage());
+          navigate(routes.loginPage());
         })
         .catch((err) => {
           if (err.response.status === 409) {

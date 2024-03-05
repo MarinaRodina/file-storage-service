@@ -7,6 +7,9 @@ const filesSlice = createSlice({
     uploadedFilesCount: 0,
   },
   reducers: {
+    displayFile(state, { payload }) {
+      state.uploadedFiles = payload;
+    },
     addFile(state, action) {
       state.uploadedFiles.push(action.payload);
       state.uploadedFilesCount +=1;
