@@ -46,8 +46,6 @@ const PersonalAccountPage = () => {
         headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
       });
       console.log("Длина массива загруженных файлов:", uploadedFiles.length);
-      //dispatch(filesActions.addFile(files));
-      //console.log("Длина массива загруженных файлов:", uploadedFiles.length);
       const response = await axios.get(routes.mediaGetPath(), {
         headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
       });
@@ -75,17 +73,15 @@ const PersonalAccountPage = () => {
       <div className="row h-100 bg-white flex-md-row">
         <div>
           <h2>Список файлов:</h2>
-          <ul>
-            {uploadedFiles.map(file => (
-              <li key={file.id}>
-                <div>{file.name}</div>
-                <button className="btn btn-danger" onClick={() => handleRemoveFile(file.id)}>Удалить</button>
-              </li>
-            ))}
-          </ul>
+          {uploadedFiles.map(file => (
+            <span key={file.id}>
+              <div>
+                {file.name}<button className="btn btn-danger" onClick={() => handleRemoveFile(file.id)}>Удалить</button>
+              </div>
+            </span>
+          ))}
+          <br />
           <FileSelectionComponent onFileChange={handleFileChange} />
-          <Button type="button" className="btn btn-primary" onClick={handleAddFile}>
-            Добавить файл в хранилище документов</Button>
           <div className="fixed-bottom bg-secondary text-white p-3">Количество файлов: {count}</div>
         </div>
       </div>

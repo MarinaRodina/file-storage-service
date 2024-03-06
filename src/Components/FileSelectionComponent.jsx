@@ -8,7 +8,7 @@ const FileSelectionComponent = ({ onFileChange }) => {
 
   return (
     <div>
-      <input type="file" onChange={handleFileChange} multiple />
+      <input type="file" className="form-control form-control-lg" onChange={handleFileChange} multiple />
     </div>
   );
 };

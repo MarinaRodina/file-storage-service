@@ -8,18 +8,14 @@ const filesSlice = createSlice({
     uploadedFilesCount: 0,
   },
   reducers: {
-    displayFile(state, { payload }) {
-      state.uploadedFiles = payload;
-    },
-    removeFile(state, action) {
-      // Логика удаления файла
-      state.uploadedFiles = state.uploadedFiles.filter(file => file.id !== action.payload);
-      state.uploadedFilesCount -=1;
-    },
     updateFiles(state, action) {
       state.uploadedFilesCount = action.payload.files.length;
       state.uploadedFiles = action.payload.files;
-    }
+    },
+    removeFile(state, action) {
+      state.uploadedFiles = state.uploadedFiles.filter(file => file.id !== action.payload);
+      state.uploadedFilesCount -=1;
+    },
   },
 });
 
