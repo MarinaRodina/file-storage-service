@@ -6,12 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import useAuth from '../Hooks/useAuth.jsx';
 import routes from '../routes.js';
 import { actions as filesActions } from '../Slices/filesSlice.js';
+import FileSelectionComponent from './FileSelectionComponent.jsx';
 
 const PersonalAccountPage = () => {
   const navigate = useNavigate();
   const auth = useAuth();
 
-  const uploadedFiles = useSelector((state) => state.filesReducer.files) || [];
+  const uploadedFiles = useSelector((state) => state.filesReducer.uploadedFiles) || [];
   const dispatch = useDispatch();
 
   const count = useSelector((state) => state.filesReducer.uploadedFilesCount);
@@ -28,9 +29,7 @@ const PersonalAccountPage = () => {
         const response = await axios.get(routes.mediaGetPath(), {
           headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
         });
-        console.log(response.data.files);
-        dispatch(filesActions.displayFile(response.data.files));
-
+        dispatch(filesActions.updateFiles(response.data));
       } catch (error) {
         if (error.status === 401) {
           navigate(routes.loginPage());
@@ -41,15 +40,31 @@ const PersonalAccountPage = () => {
     fetchData();
   }, [dispatch, auth, navigate]);
 
-  const handleAddFile = async (file) => {
-    await axios.post(routes.mediaUploadPath(), {
-      headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
-    });
-    dispatch(filesActions.addFile(file)); // Добавляем файл в состояние
+  const handleAddFile = async (files) => {
+    try {
+      await axios.post(routes.mediaUploadPath(), files, {
+        headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
+      });
+      console.log("Длина массива загруженных файлов:", uploadedFiles.length);
+      //dispatch(filesActions.addFile(files));
+      //console.log("Длина массива загруженных файлов:", uploadedFiles.length);
+      const response = await axios.get(routes.mediaGetPath(), {
+        headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
+      });
+      dispatch(filesActions.updateFiles(response.data));
+    } catch (error) {
+      console.error('Произошла ошибка при загрузке файла:', error);
+    }
+  };
+
+  const handleFileChange = async (files) => {
+    if (files.length > 0) {
+      await handleAddFile(files);
+    }
   };
 
   const handleRemoveFile = async (id) => {
-    await axios.delete(routes.mediaDeletePath(), {
+    await axios.delete(`${routes.mediaDeletePath()}/${id}`, {
       headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
     });
     dispatch(filesActions.removeFile(id)); // Удаляем файл из состояния
@@ -63,20 +78,14 @@ const PersonalAccountPage = () => {
           <ul>
             {uploadedFiles.map(file => (
               <li key={file.id}>
-                {file.name}
-                <button onClick={() => handleRemoveFile(file.id)}>Удалить</button>
+                <div>{file.name}</div>
+                <button className="btn btn-danger" onClick={() => handleRemoveFile(file.id)}>Удалить</button>
               </li>
             ))}
           </ul>
-          <Button type="button" className="btn btn-primary" onClick={() => handleAddFile({
-            id: {},
-            name: '',
-            fileName: '',
-            mimeType: '',
-            url: '',
-            createdAt: {},
-          })}>
-            Добавить файл</Button>
+          <FileSelectionComponent onFileChange={handleFileChange} />
+          <Button type="button" className="btn btn-primary" onClick={handleAddFile}>
+            Добавить файл в хранилище документов</Button>
           <div className="fixed-bottom bg-secondary text-white p-3">Количество файлов: {count}</div>
         </div>
       </div>

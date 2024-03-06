@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { current } from '@reduxjs/toolkit';
 
 const filesSlice = createSlice({
   name: 'files',
@@ -10,17 +11,17 @@ const filesSlice = createSlice({
     displayFile(state, { payload }) {
       state.uploadedFiles = payload;
     },
-    addFile(state, action) {
-      state.uploadedFiles.push(action.payload);
-      state.uploadedFilesCount +=1;
-    },
     removeFile(state, action) {
       // Логика удаления файла
-      state.uploadedFiles = state.uploadedFiles.filter(file => file.id !== action.payload.id);
+      state.uploadedFiles = state.uploadedFiles.filter(file => file.id !== action.payload);
       state.uploadedFilesCount -=1;
     },
+    updateFiles(state, action) {
+      state.uploadedFilesCount = action.payload.files.length;
+      state.uploadedFiles = action.payload.files;
+    }
   },
 });
 
-export const { actions } = filesSlice.actions;
+export const { actions } = filesSlice;
 export default filesSlice.reducer;
