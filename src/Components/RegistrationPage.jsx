@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import image from '../images/image.jpg';
@@ -99,11 +99,17 @@ const RegistrationPage = () => {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-100 mb-3 btn btn-outline-primary btn-light"
+                    className="w-100 mb-3 btn btn-primary"
                   >
                     {'Зарегистрироваться'}
                   </Button>
                 </Form>
+              </div>
+              <div className="card-footer p-4">
+                <div className="text-center">
+                  <span>{'Уже есть аккаунт? '}</span>
+                  <Link to={routes.loginPage()}>{'Войти под своим аккаунтом'}</Link>
+                </div>
               </div>
             </div>
           </div>

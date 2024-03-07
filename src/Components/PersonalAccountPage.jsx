@@ -8,6 +8,10 @@ import routes from '../routes.js';
 import { actions as filesActions } from '../Slices/filesSlice.js';
 import FileSelectionComponent from './FileSelectionComponent.jsx';
 
+const getToken = () => {
+  return JSON.parse(localStorage.getItem('userInfo')).token;
+};
+
 const PersonalAccountPage = () => {
   const navigate = useNavigate();
   const auth = useAuth();
@@ -26,8 +30,9 @@ const PersonalAccountPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = getToken();
         const response = await axios.get(routes.mediaGetPath(), {
-          headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
         dispatch(filesActions.updateFiles(response.data));
       } catch (error) {
@@ -42,12 +47,12 @@ const PersonalAccountPage = () => {
 
   const handleAddFile = async (files) => {
     try {
+      const token = getToken();
       await axios.post(routes.mediaUploadPath(), files, {
-        headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      console.log("Длина массива загруженных файлов:", uploadedFiles.length);
       const response = await axios.get(routes.mediaGetPath(), {
-        headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       dispatch(filesActions.updateFiles(response.data));
     } catch (error) {
@@ -62,8 +67,9 @@ const PersonalAccountPage = () => {
   };
 
   const handleRemoveFile = async (id) => {
+    const token = getToken();
     await axios.delete(`${routes.mediaDeletePath()}/${id}`, {
-      headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     dispatch(filesActions.removeFile(id)); // Удаляем файл из состояния
   };
@@ -76,13 +82,16 @@ const PersonalAccountPage = () => {
           {uploadedFiles.map(file => (
             <span key={file.id}>
               <div>
-                {file.name}<button className="btn btn-danger" onClick={() => handleRemoveFile(file.id)}>Удалить</button>
+                {file.name} <Button className="btn btn-danger" onClick={() => handleRemoveFile(file.id)}>Удалить</Button>
               </div>
             </span>
           ))}
           <br />
           <FileSelectionComponent onFileChange={handleFileChange} />
-          <div className="fixed-bottom bg-secondary text-white p-3">Количество файлов: {count}</div>
+          <div className="fixed-bottom bg-secondary text-white p-3">
+            <p>Количество файлов в хранилище: {count}</p>
+            <p>Максимально допустимое количество файлов в хранилище: до 20</p>
+          </div>
         </div>
       </div>
     </div>
