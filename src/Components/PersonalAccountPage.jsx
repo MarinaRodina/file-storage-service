@@ -7,6 +7,8 @@ import useAuth from '../Hooks/useAuth.jsx';
 import routes from '../routes.js';
 import { actions as filesActions } from '../Slices/filesSlice.js';
 import FileSelectionComponent from './FileSelectionComponent.jsx';
+import image2 from '../images/image2.jpg';
+import image3 from '../images/image3.jpg';
 
 const getToken = () => {
   return JSON.parse(localStorage.getItem('userInfo')).token;
@@ -74,25 +76,68 @@ const PersonalAccountPage = () => {
     dispatch(filesActions.removeFile(id)); // Удаляем файл из состояния
   };
 
+  const handleDownloadFile = async (id) => {
+    try {
+      const token = getToken();
+      const response = await axios.get(`${routes.mediaIdGetPath()}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: 'blob',
+      });
+
+      const disposition = response.headers['content-disposition'];
+      const fileNameRegex = /filename\*?=['"]?(?:UTF-\d['"]? )?([^;\r\n"']+)/i;
+      const matches = fileNameRegex.exec(disposition);
+      let fileName = 'file'; // Default filename if not found in response headers
+
+      if (matches !== null && matches[1]) {
+        fileName = decodeURIComponent(matches[1]);
+      }
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Произошла ошибка при скачивании файла:', error);
+    }
+  };
+
   return (
-    <div className="container h-100 my-4 overflow-hidden rounded shadow">
-      <div className="row h-100 bg-white flex-md-row">
-        <div>
-          <h2>Список файлов:</h2>
-          {uploadedFiles.map(file => (
-            <span key={file.id}>
-              <div>
-                {file.name} <Button className="btn btn-danger" onClick={() => handleRemoveFile(file.id)}>Удалить</Button>
+    <div className="container my-4">
+      <h2 className="text-center">Список файлов:</h2>
+      <div style={{ maxHeight: "600px", overflow: "auto" }}>
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+          {uploadedFiles.map(file => {
+            const mimeTypeParts = file.mimeType.split('/');
+            const fileType = mimeTypeParts[0];
+            return (
+              <div key={file.id} className="col-6 col-md-4 col-lg-3">
+                <div className="card">
+                  <div className="card-body">
+                    {fileType === 'image' ? (
+                      <img src={image3} alt={file.name} style={{ maxWidth: '15%', height: 'auto' }} />
+                    ) : (
+                      <img src={image2} alt={file.name} style={{ maxWidth: '15%', height: 'auto' }} />
+                    )} <span className="card-title">{file.fileName}</span>
+                    <div>
+                      <Button variant="primary" onClick={() => handleDownloadFile(file.id)}>Скачать</Button>
+                      <Button variant="danger" onClick={() => handleRemoveFile(file.id)}>Удалить</Button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </span>
-          ))}
-          <br />
-          <FileSelectionComponent onFileChange={handleFileChange} />
-          <div className="fixed-bottom bg-secondary text-white p-3">
-            <p>Количество файлов в хранилище: {count}</p>
-            <p>Максимально допустимое количество файлов в хранилище: до 20</p>
-          </div>
+            );
+          })}
         </div>
+      </div>
+      <br />
+      <FileSelectionComponent onFileChange={handleFileChange} />
+      <div className="fixed-bottom bg-secondary text-white p-3">
+        <p>Количество файлов в хранилище: {count}</p>
+        <p>Максимально допустимое количество файлов в хранилище: до 20</p>
       </div>
     </div>
   );
