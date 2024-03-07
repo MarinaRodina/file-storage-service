@@ -31,11 +31,13 @@ const LoginPage = () => {
           navigate(routes.accountPage());
         })
         .catch((err) => {
-          if (err.status === 401) {
+          if (err.response && err.response.status === 401) {
             setError('Неверные email пользователя или пароль');
             setSubmitting(false);
+          } else {
+            setError('Что-то пошло не так. Пожалуйста, попробуйте еще раз.');
+            setSubmitting(false);
           }
-          setSubmitting(false);
         })
         .finally(() => {
           setSubmitting(true);
@@ -44,7 +46,7 @@ const LoginPage = () => {
   });
 
   const errorClass = cn('form-control', {
-    'is-invalid': (errors.password) || (errors.username) || error,
+    'is-invalid': (errors.password) || (errors.email) || error,
   });
 
   return (

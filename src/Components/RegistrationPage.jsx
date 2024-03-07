@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import image from '../images/image.jpg';
 import routes from '../routes.js';
+import cn from 'classnames';
 import useAuth from '../Hooks/useAuth.jsx';
 
 const RegistrationPage = () => {
   const auth = useAuth();
   const navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const {
     values, errors, touched, handleChange, handleSubmit, handleBlur, setSubmitting, isSubmitting,
@@ -28,13 +30,19 @@ const RegistrationPage = () => {
           navigate(routes.loginPage());
         })
         .catch((err) => {
-          if (err.response.status === 409) {
-            errors.username = 'Такой пользователь уже существует';
-            return setSubmitting(false);
+          if (err.response.status === 422) {
+            setError({
+              ...errors,
+            });
+            setSubmitting(false);
           }
-          return setSubmitting(false);
+          setSubmitting(false);
         });
     },
+  });
+
+  const errorClass = cn('form-control', {
+    'is-invalid': (errors.email) || (errors.password) || (errors.name) || error,
   });
 
   return (
@@ -56,7 +64,7 @@ const RegistrationPage = () => {
                       autoComplete="email"
                       required=""
                       id="email"
-                      className={errors.email && touched.email ? 'form-control is-invalid' : 'form-control'}
+                      className={errorClass}
                       onChange={handleChange}
                       value={values.email}
                       onBlur={handleBlur}
@@ -73,7 +81,7 @@ const RegistrationPage = () => {
                       autoComplete="new-password"
                       type="password"
                       id="password"
-                      className={errors.password && touched.password ? 'form-control is-invalid' : 'form-control'}
+                      className={errorClass}
                       onChange={handleChange}
                       value={values.password}
                       onBlur={handleBlur}
@@ -88,13 +96,14 @@ const RegistrationPage = () => {
                       autoComplete="name"
                       required=""
                       id="name"
-                      className={errors.name && touched.name ? 'form-control is-invalid' : 'form-control'}
+                      className={errorClass}
                       onChange={handleChange}
                       value={values.name}
                       onBlur={handleBlur}
                     />
-                    <div className="invalid-tooltip">{errors.name}</div>
-                    <Form.Label className="form-label" htmlFor="name">{'Имя позователя'}</Form.Label>
+                    {errors.name && <div className="invalid-tooltip">{errors.name}</div>}
+                    <Form.Label className="form-label" htmlFor="name">{'Имя пользователя'}</Form.Label>
+                    <Form.Control.Feedback type="invalid">{'Такой пользователь уже существует'}</Form.Control.Feedback>
                   </Form.Group>
                   <Button
                     type="submit"

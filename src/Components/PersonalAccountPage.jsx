@@ -123,7 +123,7 @@ const PersonalAccountPage = () => {
                       <img src={image2} alt={file.name} style={{ maxWidth: '15%', height: 'auto' }} />
                     )} <span className="card-title">{file.fileName}</span>
                     <div>
-                      <Button variant="primary" onClick={() => handleDownloadFile(file.id)}>Скачать</Button>
+                      <Button className="btn btn-success" onClick={() => handleDownloadFile(file.id)}>Скачать</Button>
                       <Button variant="danger" onClick={() => handleRemoveFile(file.id)}>Удалить</Button>
                     </div>
                   </div>

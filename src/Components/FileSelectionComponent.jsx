@@ -1,5 +1,7 @@
 import React from 'react';
 
+// определяем компонент, отвечающий за выбор документов для загрузки:
+
 const FileSelectionComponent = ({ onFileChange }) => {
   const handleFileChange = (event) => {
     const files = event.target.files;
