@@ -14,7 +14,7 @@ const RegistrationPage = () => {
   const [error, setError] = useState('');
 
   const {
-    values, errors, touched, handleChange, handleSubmit, handleBlur, setSubmitting, isSubmitting,
+    values, errors, handleChange, handleSubmit, handleBlur, setSubmitting, isSubmitting,
   } = useFormik({
     initialValues: {
       email: '',
