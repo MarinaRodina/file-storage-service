@@ -1,7 +1,6 @@
 const apiPath = 'https://js-test.kitactive.ru/api';
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
+const routes = {
   registerPath: () => [apiPath, 'register'].join('/'),
   loginPath: () => [apiPath, 'login'].join('/'),
   logoutPath: () => [apiPath, 'logout'].join('/'),
@@ -13,3 +12,5 @@ export default {
   loginPage: () => '/login',
   accountPage: () => '/',
 };
+
+export default routes;
