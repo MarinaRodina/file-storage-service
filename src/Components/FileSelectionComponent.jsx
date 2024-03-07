@@ -10,7 +10,10 @@ const FileSelectionComponent = ({ onFileChange }) => {
 
   return (
     <div>
-      <input type="file" className="form-control form-control-lg" onChange={handleFileChange} multiple />
+      <label htmlFor="file-upload" className="btn btn-primary">
+        Выбрать файлы для загрузки в хранилище
+      </label>
+      <input id="file-upload" type="file" className="form-control form-control-lg" onChange={handleFileChange} multiple style={{ display: 'none' }} />
     </div>
   );
 };

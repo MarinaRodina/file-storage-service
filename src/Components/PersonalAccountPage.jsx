@@ -17,10 +17,8 @@ const getToken = () => {
 const PersonalAccountPage = () => {
   const navigate = useNavigate();
   const auth = useAuth();
-
   const uploadedFiles = useSelector((state) => state.filesReducer.uploadedFiles) || [];
   const dispatch = useDispatch();
-
   const count = useSelector((state) => state.filesReducer.uploadedFilesCount);
 
   useEffect(() => {
@@ -84,15 +82,7 @@ const PersonalAccountPage = () => {
         responseType: 'blob',
       });
 
-      const disposition = response.headers['content-disposition'];
-      const fileNameRegex = /filename\*?=['"]?(?:UTF-\d['"]? )?([^;\r\n"']+)/i;
-      const matches = fileNameRegex.exec(disposition);
-      let fileName = 'file'; // Default filename if not found in response headers
-
-      if (matches !== null && matches[1]) {
-        fileName = decodeURIComponent(matches[1]);
-      }
-
+      const fileName = uploadedFiles.filter(file => file.id === id)[0].fileName;
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -107,24 +97,26 @@ const PersonalAccountPage = () => {
 
   return (
     <div className="container my-4">
-      <h2 className="text-center">Список файлов:</h2>
-      <div style={{ maxHeight: "600px", overflow: "auto" }}>
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <h2>Количество файлов в хранилище: {count}</h2>
+      <FileSelectionComponent onFileChange={handleFileChange} />
+      <h3 className="text-center">Список файлов:</h3>
+      <div>
+        <div className="row">
           {uploadedFiles.map(file => {
             const mimeTypeParts = file.mimeType.split('/');
             const fileType = mimeTypeParts[0];
             return (
-              <div key={file.id} className="col-6 col-md-4 col-lg-3">
+              <div key={file.id} className="col-lg-2 col-md-3 col-sm-4" style={{ padding: '10px' }} >
                 <div className="card">
-                  <div className="card-body">
+                  <div className="card-body text-center">
                     {fileType === 'image' ? (
-                      <img src={image3} alt={file.name} style={{ maxWidth: '15%', height: 'auto' }} />
+                      <img src={image3} alt={file.name} style={{ maxWidth: '100px', height: '100px' }} />
                     ) : (
-                      <img src={image2} alt={file.name} style={{ maxWidth: '15%', height: 'auto' }} />
-                    )} <span className="card-title">{file.fileName}</span>
+                      <img src={image2} alt={file.name} style={{ maxWidth: '100px', height: '100px' }} />
+                    )} <br /><span className="card-title">{file.fileName}</span>
                     <div>
-                      <Button className="btn btn-success" onClick={() => handleDownloadFile(file.id)}>Скачать</Button>
-                      <Button variant="danger" onClick={() => handleRemoveFile(file.id)}>Удалить</Button>
+                      <Button className="btn btn-info" onClick={() => handleDownloadFile(file.id)}>Скачать</Button>
+                      <Button className="btn btn-light" onClick={() => handleRemoveFile(file.id)}>Удалить</Button>
                     </div>
                   </div>
                 </div>
@@ -132,12 +124,6 @@ const PersonalAccountPage = () => {
             );
           })}
         </div>
-      </div>
-      <br />
-      <FileSelectionComponent onFileChange={handleFileChange} />
-      <div className="fixed-bottom bg-secondary text-white p-3">
-        <p>Количество файлов в хранилище: {count}</p>
-        <p>Максимально допустимое количество файлов в хранилище: до 20</p>
       </div>
     </div>
   );
