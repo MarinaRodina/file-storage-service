@@ -5,6 +5,7 @@ import useAuth from '../Hooks/useAuth.jsx';
 import routes from '../routes.js';
 import axios from 'axios';
 
+// Определяем компонент отвечающий за выход из хранилища
 const getToken = () => {
   const userInfo = localStorage.getItem('userInfo');
   return userInfo ? JSON.parse(userInfo).token : null;

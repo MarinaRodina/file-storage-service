@@ -1,7 +1,6 @@
 import React from 'react';
 
-// определяем компонент, отвечающий за выбор документов для загрузки:
-
+// Компонент, отвечающий за выбор документов для загрузки:
 const FileSelectionComponent = ({ onFileChange }) => {
   const handleFileChange = (event) => {
     const files = event.target.files;
@@ -11,7 +10,7 @@ const FileSelectionComponent = ({ onFileChange }) => {
   return (
     <div>
       <label htmlFor="file-upload" className="btn btn-primary">
-        Выбрать файлы для загрузки в хранилище
+        {'Выбрать новые файлы для загрузки'}
       </label>
       <input id="file-upload" type="file" className="form-control form-control-lg" onChange={handleFileChange} multiple style={{ display: 'none' }} />
     </div>

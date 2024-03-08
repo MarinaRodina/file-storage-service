@@ -8,20 +8,19 @@ import routes from '../routes.js';
 import cn from 'classnames';
 import useAuth from '../Hooks/useAuth.jsx';
 
+// Компонент, отвечающий за авторизацию пользователя
 const LoginPage = () => {
   const auth = useAuth();
   const navigate = useNavigate();
-
   const [error, setError] = useState('');
 
   const {
     values, errors, handleChange, handleSubmit, setSubmitting, isSubmitting,
   } = useFormik({
     initialValues: {
-      emaii: '',
+      email: '',
       password: '',
     },
-    validateOnChange: false,
     errorToken: false,
     onSubmit: () => {
       setSubmitting(true);

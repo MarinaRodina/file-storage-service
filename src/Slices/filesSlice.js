@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { current } from '@reduxjs/toolkit';
 
 const filesSlice = createSlice({
   name: 'files',
   initialState: {
-    uploadedFiles: [],
-    uploadedFilesCount: 0,
+    uploadedFiles: [], // массив загруженных файлов
+    uploadedFilesCount: 0, // счётчик количества загруженных файлов
   },
   reducers: {
     updateFiles(state, action) {

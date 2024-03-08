@@ -10,7 +10,7 @@ import FileSelectionComponent from './FileSelectionComponent.jsx';
 import image2 from '../images/image2.jpg';
 import image3 from '../images/image3.jpg';
 
-
+// Личный кабинет пользователя
 const PersonalAccountPage = () => {
   const getToken = () => {
     return JSON.parse(localStorage.getItem('userInfo')).token;
@@ -45,6 +45,7 @@ const PersonalAccountPage = () => {
     fetchData();
   }, [dispatch, auth, navigate]);
 
+  // Функция добавления файлов:
   const handleAddFile = async (files) => {
     try {
       const token = getToken();
@@ -54,14 +55,15 @@ const PersonalAccountPage = () => {
       const response = await axios.get(routes.mediaGetPath(), {
         headers: { Authorization: `Bearer ${token}` },
       });
-      dispatch(filesActions.updateFiles(response.data));
+      dispatch(filesActions.updateFiles(response.data)); // Обновляем файлы в состоянии
     } catch (error) {
       if (error) {
         if (error.message === 'Request failed with status code 470') {
-          alert('Внимание! Превышено допустимое количество файлов в хранилище (20 штук)');
+          alert('Внимание! Превышено допустимое количество файлов в хранилище (19 штук)');
+          // (в хранилище 20 файлов не заружается!)
         }
         if (error.message === 'Network Error') {
-          alert('Внимание! Превышен допустимый размер файла (за 1 запрос - 1MБ)');
+          alert('Внимание! Превышен допустимый размер загружаемых данных (за 1 запрос - 1MБ)');
         }
       } else {
         console.error('Произошла ошибка:', error);
@@ -69,12 +71,14 @@ const PersonalAccountPage = () => {
     }
   };
 
+  // Функция добавляет файлы, если массив файлов не пустой:
   const handleFileChange = async (files) => {
     if (files.length > 0) {
       await handleAddFile(files);
     }
   };
 
+  // Функция удаления файлов:
   const handleRemoveFile = async (id) => {
     const token = getToken();
     await axios.delete(`${routes.mediaDeletePath()}/${id}`, {
@@ -83,6 +87,7 @@ const PersonalAccountPage = () => {
     dispatch(filesActions.removeFile(id)); // Удаляем файл из состояния
   };
 
+  // Функция для скачивания файлов:
   const handleDownloadFile = async (id) => {
     try {
       const token = getToken();
@@ -106,9 +111,10 @@ const PersonalAccountPage = () => {
 
   return (
     <div className="container my-4">
-      <h2>Количество файлов в хранилище: {count}</h2>
+      <h2>{'Количество файлов в хранилище: '}{count}</h2>
+      <br />
       <FileSelectionComponent onFileChange={handleFileChange} />
-      <h3 className="text-center">Список файлов:</h3>
+      <br />
       <div>
         <div className="row">
           {uploadedFiles.map(file => {
@@ -124,8 +130,8 @@ const PersonalAccountPage = () => {
                       <img src={image2} alt={file.name} style={{ maxWidth: '100px', height: '100px' }} />
                     )} <br /><span className="card-title">{file.fileName}</span>
                     <div>
-                      <Button className="btn btn-info" onClick={() => handleDownloadFile(file.id)}>Скачать</Button>
-                      <Button className="btn btn-light" onClick={() => handleRemoveFile(file.id)}>Удалить</Button>
+                      <Button className="btn btn-info" onClick={() => handleDownloadFile(file.id)}>{'Скачать'}</Button>
+                      <Button className="btn btn-light" onClick={() => handleRemoveFile(file.id)}>{'Удалить'}</Button>
                     </div>
                   </div>
                 </div>

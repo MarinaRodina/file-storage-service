@@ -8,6 +8,7 @@ import routes from '../routes.js';
 import cn from 'classnames';
 import useAuth from '../Hooks/useAuth.jsx';
 
+// Компонент, отвечающий за регистрацию пользователя
 const RegistrationPage = () => {
   const auth = useAuth();
   const navigate = useNavigate();
