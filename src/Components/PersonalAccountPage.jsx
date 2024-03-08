@@ -10,11 +10,11 @@ import FileSelectionComponent from './FileSelectionComponent.jsx';
 import image2 from '../images/image2.jpg';
 import image3 from '../images/image3.jpg';
 
-const getToken = () => {
-  return JSON.parse(localStorage.getItem('userInfo')).token;
-};
 
 const PersonalAccountPage = () => {
+  const getToken = () => {
+    return JSON.parse(localStorage.getItem('userInfo')).token;
+  };
   const navigate = useNavigate();
   const auth = useAuth();
   const uploadedFiles = useSelector((state) => state.filesReducer.uploadedFiles) || [];
@@ -56,7 +56,16 @@ const PersonalAccountPage = () => {
       });
       dispatch(filesActions.updateFiles(response.data));
     } catch (error) {
-      console.error('Произошла ошибка при загрузке файла:', error);
+      if (error) {
+        if (error.message === 'Request failed with status code 470') {
+          alert('Внимание! Превышено допустимое количество файлов в хранилище (20 штук)');
+        }
+        if (error.message === 'Network Error') {
+          alert('Внимание! Превышен допустимый размер файла (за 1 запрос - 1MБ)');
+        }
+      } else {
+        console.error('Произошла ошибка:', error);
+      }
     }
   };
 
