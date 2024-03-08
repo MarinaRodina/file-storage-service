@@ -1,7 +1,7 @@
 # File storage service
 
 ### About:
-This application is a service for storing files. After registration and authorization in your personal account, you can download, display and delete files. The total number of files that a user can upload is 20, the maximum size of uploaded data for 1 request is 1MB.
+This application is a service for storing files. After registration and authorization in your personal account, you can download, display and delete files. The total number of files that a user can upload is 19, the maximum size of uploaded data for 1 request is 1MB.
 
 ### System requirements:
 `Node.js v18 or higher`
